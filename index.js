@@ -99,3 +99,23 @@ function mainMenu() {
     });
   }
   
+
+//   Add Department
+//   Prompts the user for a department name and inserts it into the database.
+  
+function addDepartment() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'departmentName',
+            message: 'What is the name of the new department?'
+        }
+    ]).then(answer => {
+        const query = `INSERT INTO department (name) VALUES ($1)`;
+        pool.query(query, [answer.departmentName], (err, res) => {
+            if (err) throw err;
+            console.log(`Added ${answer.departmentName} to the database`);
+            mainMenu(); // Return to the main menu after inserting
+        });
+    });
+}
