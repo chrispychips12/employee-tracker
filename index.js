@@ -60,5 +60,42 @@ function mainMenu() {
     });
   }
   
-
+  mainMenu(); // Call the main menu function to start the application
+  
+  function viewAllDepartments() { // Function to view all departments, fetch department name
+    pool.query('SELECT * FROM department', (err, res) => {
+      if (err) throw err;
+      console.table(res.rows);
+      mainMenu(); // Return to main menu after displaying
+    });
+  }
+  
+  function viewAllRoles() { // Function to view all roles, fetch department and salary
+    const query = `
+      SELECT role.id, role.title, department.name AS department, role.salary
+      FROM role
+      LEFT JOIN department ON role.department_id = department.id
+    `;
+    pool.query(query, (err, res) => {
+      if (err) throw err;
+      console.table(res.rows);
+      mainMenu();
+    });
+  }
+  
+  function viewAllEmployees() { // Function to view all employees, fetch role, department, salaraty, and manager
+    const query = `
+      SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, 
+             CONCAT(manager.first_name, ' ', manager.last_name) AS manager
+      FROM employee
+      LEFT JOIN role ON employee.role_id = role.id
+      LEFT JOIN department ON role.department_id = department.id
+      LEFT JOIN employee manager ON employee.manager_id = manager.id
+    `;
+    pool.query(query, (err, res) => {
+      if (err) throw err;
+      console.table(res.rows);
+      mainMenu();
+    });
+  }
   
