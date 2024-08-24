@@ -99,7 +99,40 @@ function mainMenu() {
     });
   }
   
-
+  // Add Employee 
+  // Prompts the user for employee details and inserts them into the database.
+  function addEmployee() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'firstName',
+            message: "What is the employee's first name?"
+        },
+        {
+            type: 'input',
+            name: 'lastName',
+            message: "What is the employee's last name?"
+        },
+        {
+            type: 'input',
+            name: 'roleId',
+            message: "What is the role ID for this employee?"
+        },
+        {
+            type: 'input',
+            name: 'managerId',
+            message: "What is the manager ID for this employee? (Leave blank if none)"
+        }
+    ]).then(answer => {
+        const query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4)`;
+        const values = [answer.firstName, answer.lastName, answer.roleId, answer.managerId || null];
+        pool.query(query, values, (err, res) => {
+            if (err) throw err;
+            console.log(`Added ${answer.firstName} ${answer.lastName} to the database`);
+            mainMenu(); // Return to the main menu after inserting
+        });
+    });
+}
 //   Add Department
 //   Prompts the user for a department name and inserts it into the database.
   
