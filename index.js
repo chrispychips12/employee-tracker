@@ -119,3 +119,33 @@ function addDepartment() {
         });
     });
 }
+ 
+//  Add Role
+//  Prompts the user for role details and inserts it into the database.
+
+function addRole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'roleTitle',
+            message: 'What is the title of the new role?'
+        },
+        {
+            type: 'input',
+            name: 'roleSalary',
+            message: 'What is the salary for this role?'
+        },
+        {
+            type: 'input',
+            name: 'departmentId',
+            message: 'What is the department ID for this role?'
+        }
+    ]).then(answer => {
+        const query = `INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)`;
+        pool.query(query, [answer.roleTitle, answer.roleSalary, answer.departmentId], (err, res) => {
+            if (err) throw err;
+            console.log(`Added ${answer.roleTitle} to the database`);
+            mainMenu(); // Return to the main menu after inserting
+        });
+    });
+}
