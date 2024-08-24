@@ -149,3 +149,28 @@ function addRole() {
         });
     });
 }
+
+// Add an 'update employee role' function to update an employee's role in the database.
+// Prompts the user for an employee ID and new role ID, then updates the employee's role in the database.
+
+function updateEmployeeRole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'employeeId',
+            message: "What is the employee's ID?"
+        },
+        {
+            type: 'input',
+            name: 'roleId',
+            message: "What is the new role ID for this employee?"
+        }
+    ]).then(answer => {
+        const query = `UPDATE employee SET role_id = $1 WHERE id = $2`;
+        pool.query(query, [answer.roleId, answer.employeeId], (err, res) => {
+            if (err) throw err;
+            console.log(`Updated employee's role`);
+            mainMenu(); // Return to the main menu after updating
+        });
+    });
+}
